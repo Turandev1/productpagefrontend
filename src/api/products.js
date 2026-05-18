@@ -1,12 +1,15 @@
 // Base URL — Vite proxy üzərindən backend-ə yönləndirmə
 // İnkişafda Vite proxy (vite.config.js) /api-ni localhost:5000-ə yönləndirir
 // Production-da backend eyni domain üzərindən xidmət edilməlidir
-const API_BASE = "/api";
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
 
-// 2. Təhlükəsiz URL yaradıcı (Modern URL API-si istifadəsi)
 const apiUrl = (path) => {
-  // Əgər path '/' ilə başlamırsa başına əlavə edir, cüt '/' yaranmasını da əngəlləyir
   const cleanPath = path.startsWith('/') ? path : `/${path}`;
+  
+  // URL sonundaki ve başındaki eğik çizgileri (/) güvenli birleştirme
+  if (API_BASE.endsWith('/') && cleanPath.startsWith('/')) {
+    return `${API_BASE}${cleanPath.substring(1)}`;
+  }
   return `${API_BASE}${cleanPath}`;
 };
 

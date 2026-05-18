@@ -3,8 +3,9 @@ import axios from 'axios';
 // 1. Axios Instance Yaradılması
 // Vite proxy parametrlərinizlə uyğun işləməsi üçün baseURL '/api' olaraq təyin edildi.
 const api = axios.create({
-  baseURL: '/api',
-  timeout: 10000, // 10 saniyə zaman aşımı müddəti
+  // Çevre değişkenini oku, bulamazsan fallback olarak lokal `/api` kullan
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api',
+  timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
   },
