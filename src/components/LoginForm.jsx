@@ -10,7 +10,7 @@ export default function LoginForm({ onLoginSuccess }) {
 
   const handleLogin = async () => {
     if (!email.trim() || !password.trim()) {
-      toast.error("E-posta ve şifre zorunludur");
+      toast.error("E-poçt və şifrə məcburidir");
       return false;
     }
     const data = await login(email.trim(), password);
@@ -26,7 +26,7 @@ export default function LoginForm({ onLoginSuccess }) {
     try {
       await handleLogin();
     } catch (err) {
-      const message = err.message || "İşlem başarısız";
+      const message = err.message || "Əməliyyat uğursuz";
       if (message.includes("\n")) {
         const lines = message.split("\n");
         lines.forEach((line) => line.trim() && toast.error(line.trim()));
@@ -64,17 +64,17 @@ export default function LoginForm({ onLoginSuccess }) {
           Admin Girişi
         </h2>
         <p className="text-sm text-gray-500 text-center mb-6">
-          Yönetim paneline erişmek için giriş yapın
+          İdarəetmə panelinə daxil olmaq üçün giriş edin
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* E-posta */}
+          {/* E-poçt */}
           <div>
             <label
               htmlFor="email"
               className="block text-sm font-medium text-gray-700 mb-1"
             >
-              E-posta Adresi
+              E-poçt Ünvanı
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -98,19 +98,19 @@ export default function LoginForm({ onLoginSuccess }) {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-sm bg-gray-50 focus:bg-white"
-                placeholder="E-posta adresinizi girin"
+                placeholder="E-poçt ünvanınızı daxil edin"
                 autoComplete="email"
               />
             </div>
           </div>
 
-          {/* Şifre */}
+          {/* Şifrə */}
           <div>
             <label
               htmlFor="password"
               className="block text-sm font-medium text-gray-700 mb-1"
             >
-              Şifre
+              Şifrə
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -134,7 +134,7 @@ export default function LoginForm({ onLoginSuccess }) {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full pl-10 pr-10 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-sm bg-gray-50 focus:bg-white"
-                placeholder="Şifrenizi girin"
+                placeholder="Şifrənizi daxil edin"
                 autoComplete="current-password"
               />
               <button
@@ -142,7 +142,7 @@ export default function LoginForm({ onLoginSuccess }) {
                 onClick={() => setShowPassword((prev) => !prev)}
                 className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
                 tabIndex={-1}
-                aria-label={showPassword ? "Şifreyi gizle" : "Şifreyi göster"}
+                aria-label={showPassword ? "Şifrəni gizlət" : "Şifrəni göstər"}
               >
                 {showPassword ? (
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -166,10 +166,10 @@ export default function LoginForm({ onLoginSuccess }) {
             {loading ? (
               <span className="flex items-center justify-center gap-2">
                 <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-                Giriş yapılıyor...
+                Giriş edilir...
               </span>
             ) : (
-              "Giriş Yap"
+              "Giriş Et"
             )}
           </button>
         </form>

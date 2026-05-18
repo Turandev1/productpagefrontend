@@ -24,7 +24,7 @@ export default function Navbar() {
                 />
               </svg>
             </span>
-            Ürün Galerisi
+            Məhsul Qalereyası
           </Link>
 
           <Link

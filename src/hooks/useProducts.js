@@ -17,7 +17,7 @@ export function useProducts(page = 1, limit = 20, search = '') {
       setPagination(data.pagination)
     } catch (err) {
       setError(err.message)
-      toast.error('Ürünler yüklenirken hata oluştu: ' + err.message)
+      toast.error('Məhsullar yüklənərkən xəta baş verdi: ' + err.message)
     } finally {
       setLoading(false)
     }

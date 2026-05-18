@@ -11,7 +11,7 @@ export default function SessionPasswordForm({ token, onSessionVerified }) {
     e.preventDefault()
 
     if (!password.trim()) {
-      toast.error('Şifre zorunludur')
+      toast.error('Şifrə məcburidir')
       return
     }
 
@@ -19,16 +19,16 @@ export default function SessionPasswordForm({ token, onSessionVerified }) {
       setLoading(true)
       await verifySession(password, token)
       sessionStorage.setItem('adminSessionVerified', 'true')
-      toast.success('Oturum doğrulandı')
+      toast.success('Sessiya təsdiqləndi')
       onSessionVerified()
     } catch (err) {
-      const message = err.message || 'Şifre doğrulanamadı'
+      const message = err.message || 'Şifrə təsdiqlənə bilmədi'
 
-      if (message.includes('Endpoint bulunamadı') || message.includes('404')) {
-        toast.error('Sunucuya bağlanılamadı. Lütfen backend sunucusunun çalıştığından emin olun.')
-      } else if (message.includes('token') || message.includes('oturum')) {
-        toast.error('Oturum süreniz dolmuş. Lütfen tekrar giriş yapın.')
-        // Token geçersizse localStorage'ı temizle
+      if (message.includes('Endpoint tapılmadı') || message.includes('404')) {
+        toast.error('Serverə qoşulmaq mümkün olmadı. Zəhmət olmasa backend serverinin işlədiyindən əmin olun.')
+      } else if (message.includes('token') || message.includes('sessiya')) {
+        toast.error('Sessiya müddətiniz bitmişdir. Zəhmət olmasa yenidən giriş edin.')
+        // Token yanlışdırsa localStorage-ı təmizlə
         localStorage.removeItem('adminToken')
         sessionStorage.removeItem('adminSessionVerified')
         window.location.reload()
@@ -54,16 +54,16 @@ export default function SessionPasswordForm({ token, onSessionVerified }) {
         </div>
 
         <h2 className="text-2xl font-bold text-gray-900 mb-2 text-center">
-          Oturum Doğrulama
+          Sessiya Təsdiqləmə
         </h2>
         <p className="text-sm text-gray-500 text-center mb-6">
-          Admin paneline erişmek için şifrenizi tekrar girin
+          Admin panelinə daxil olmaq üçün şifrənizi yenidən daxil edin
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label htmlFor="sessionPassword" className="block text-sm font-medium text-gray-700 mb-1">
-              Şifre
+              Şifrə
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -78,7 +78,7 @@ export default function SessionPasswordForm({ token, onSessionVerified }) {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full pl-10 pr-10 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-sm bg-gray-50 focus:bg-white"
-                placeholder="Admin şifrenizi girin"
+                placeholder="Admin şifrənizi daxil edin"
                 autoComplete="current-password"
                 autoFocus
               />
@@ -87,7 +87,7 @@ export default function SessionPasswordForm({ token, onSessionVerified }) {
                 onClick={() => setShowPassword((prev) => !prev)}
                 className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
                 tabIndex={-1}
-                aria-label={showPassword ? "Şifreyi gizle" : "Şifreyi göster"}
+                aria-label={showPassword ? "Şifrəni gizlət" : "Şifrəni göstər"}
               >
                 {showPassword ? (
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -111,10 +111,10 @@ export default function SessionPasswordForm({ token, onSessionVerified }) {
             {loading ? (
               <span className="flex items-center justify-center gap-2">
                 <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-                Doğrulanıyor...
+                Təsdiqlənir...
               </span>
             ) : (
-              'Doğrula'
+              'Təsdiqlə'
             )}
           </button>
         </form>

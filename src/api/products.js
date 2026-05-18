@@ -1,11 +1,11 @@
-// Base URL — Vite proxy üzerinden backend'e yönlendirme
-// Geliştirmede Vite proxy (vite.config.js) /api'yi localhost:5000'e yönlendirir
-// Production'da backend aynı domain üzerinden servis edilmelidir
+// Base URL — Vite proxy üzərindən backend-ə yönləndirmə
+// İnkişafda Vite proxy (vite.config.js) /api-ni localhost:5000-ə yönləndirir
+// Production-da backend eyni domain üzərindən xidmət edilməlidir
 const API_BASE = "/api";
 
-// 2. Güvenli URL oluşturucu (Modern URL API'si kullanımı)
+// 2. Təhlükəsiz URL yaradıcı (Modern URL API-si istifadəsi)
 const apiUrl = (path) => {
-  // Eğer path '/' ile başlamıyorsa başına ekler, çift '/' oluşmasını da engeller
+  // Əgər path '/' ilə başlamırsa başına əlavə edir, cüt '/' yaranmasını da əngəlləyir
   const cleanPath = path.startsWith('/') ? path : `/${path}`;
   return `${API_BASE}${cleanPath}`;
 };
@@ -19,42 +19,42 @@ async function handleResponse(response) {
   }
 
   if (!response.ok) {
-    // 400 — Validasyon hataları
+    // 400 — Validasiya xətaları
     if (response.status === 400) {
-      const message = data.message || "Geçersiz istek. Lütfen bilgilerinizi kontrol edin.";
+      const message = data.message || "Yanlış sorğu. Zəhmət olmasa məlumatlarınızı yoxlayın.";
       if (data.errors && Array.isArray(data.errors)) {
         throw new Error(`${message}\n${data.errors.join("\n")}`);
       }
       throw new Error(message);
     }
 
-    // 401 — Yetkilendirme hatası
+    // 401 — Yetkiləndirmə xətası
     if (response.status === 401) {
-      throw new Error(data.message || "Yetkilendirme başarısız. Lütfen tekrar giriş yapın.");
+      throw new Error(data.message || "Yetkiləndirmə uğursuz. Zəhmət olmasa yenidən giriş edin.");
     }
 
-    // 404 — Bulunamadı
+    // 404 — Tapılmadı
     if (response.status === 404) {
       const pathInfo = data.path ? ` (${data.method} ${data.path})` : "";
-      throw new Error(data.message || `Endpoint bulunamadı${pathInfo}. Sunucunun çalıştığından emin olun.`);
+      throw new Error(data.message || `Endpoint tapılmadı${pathInfo}. Serverin işlədiyindən əmin olun.`);
     }
 
-    // 409 — Çakışma
+    // 409 — Çatışmazlıq
     if (response.status === 409) {
-      throw new Error(data.message || "Bu bilgiler zaten kullanılıyor.");
+      throw new Error(data.message || "Bu məlumatlar artıq istifadə olunur.");
     }
 
-    // 503 — Servis kullanılamıyor
+    // 503 — Xidmət əlçatan deyil
     if (response.status === 503) {
-      throw new Error(data.message || "Sunucu şu anda hizmet veremiyor. Lütfen daha sonra tekrar deneyin.");
+      throw new Error(data.message || "Server hazırda xidmət verə bilmir. Zəhmət olmasa daha sonra yenidən cəhd edin.");
     }
 
-    throw new Error(data.message || `İstek başarısız (${response.status} - ${response.statusText})`);
+    throw new Error(data.message || `Sorğu uğursuz oldu (${response.status} - ${response.statusText})`);
   }
 
-  // Backend'den başarılı HTTP koduyla gelen hataları da yakala
+  // Backend-dən uğurlu HTTP kodu ilə gələn xətaları da tut
   if (data.success === false) {
-    throw new Error(data.message || "İşlem başarısız oldu.");
+    throw new Error(data.message || "Əməliyyat uğursuz oldu.");
   }
 
   return data;
@@ -66,13 +66,13 @@ async function handleFetch(url, options = {}) {
     return await handleResponse(response);
   } catch (err) {
     if (err instanceof TypeError && err.message === "Failed to fetch") {
-      throw new Error("Sunucuya bağlanılamadı. Lütfen backend sunucusunun çalıştığından emin olun.", { cause: err });
+      throw new Error("Serverə qoşulmaq mümkün olmadı. Zəhmət olmasa backend serverinin işlədiyindən əmin olun.", { cause: err });
     }
     throw err;
   }
 }
 
-// --- API İstek Fonksiyonları ---
+// --- API Sorğu Funksiyaları ---
 
 export const getProducts = async (page = 1, limit = 20, search = '') => {
   const params = new URLSearchParams({ page, limit });
@@ -83,7 +83,7 @@ export const getProducts = async (page = 1, limit = 20, search = '') => {
 };
 
 export const getProductById = async (id) => {
-  return handleFetch(apiUrl(`/products/${id}`)); // Gereksiz şablon string (`${}`) kaldırıldı
+  return handleFetch(apiUrl(`/products/${id}`));
 };
 
 export const createProduct = async (formData, token) => {

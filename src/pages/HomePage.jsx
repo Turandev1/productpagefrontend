@@ -6,7 +6,7 @@ export default function HomePage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearch, setDebouncedSearch] = useState('')
 
-  // Debounce search input — 300ms bekleme
+  // Debounce search input — 300ms gözləmə
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearch(searchTerm)
@@ -30,21 +30,21 @@ export default function HomePage() {
         {/* header */}
         <div className="relative">
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2">
-            Ürün Galerisi
+            Məhsul Qalereyası
           </h1>
           <p className="text-sm sm:text-base text-gray-300 max-w-xl">
-            Tüm ürünlerimizi keşfedin. Her biri özenle seçilmiş ve sergilenmektedir.
+            Bütün məhsullarımızı kəşf edin. Hər biri xüsusi seçilmiş və nümayiş etdirilir.
           </p>
           <div className="mt-3 flex items-center gap-2 text-xs sm:text-sm text-gray-400">
             <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></div>
             {!loading && !error && (
-              <span>{products.length} ürün listeleniyor</span>
+              <span>{products.length} məhsul siyahılanır</span>
             )}
           </div>
         </div>
       </div>
 
-      {/* Arama Çubuğu */}
+      {/* Axtarış Çubuğu */}
       <div className="mb-6 sm:mb-8">
         <div className="relative max-w-xl">
           <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
@@ -57,7 +57,7 @@ export default function HomePage() {
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Ürün adı ile ara..."
+            placeholder="Məhsul adı ilə axtar..."
             className="w-full pl-11 pr-10 py-3 bg-white border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm hover:shadow-md"
           />
           {searchTerm && (
@@ -73,15 +73,15 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Yükleme Durumu */}
+      {/* Yükləmə Vəziyyəti */}
       {loading && (
         <div className="flex flex-col items-center justify-center py-20">
           <div className="w-10 h-10 sm:w-12 sm:h-12 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin"></div>
-          <p className="mt-4 text-sm sm:text-base text-gray-500">Ürünler yükleniyor...</p>
+          <p className="mt-4 text-sm sm:text-base text-gray-500">Məhsullar yüklənir...</p>
         </div>
       )}
 
-      {/* Hata Durumu */}
+      {/* Xəta Vəziyyəti */}
       {error && !loading && (
         <div className="text-center py-20">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-100 mb-4">
@@ -90,12 +90,12 @@ export default function HomePage() {
                 d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">Bir hata oluştu</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">Bir xəta baş verdi</h3>
           <p className="text-sm text-gray-500">{error}</p>
         </div>
       )}
 
-      {/* Ürün Yok / Arama Sonucu Yok Durumu */}
+      {/* Məhsul Yoxdur / Axtarış Nəticəsi Yoxdur Vəziyyəti */}
       {!loading && !error && products.length === 0 && (
         <div className="text-center py-20">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 mb-4">
@@ -112,25 +112,25 @@ export default function HomePage() {
             )}
           </div>
           <h3 className="text-lg font-medium text-gray-900 mb-2">
-            {debouncedSearch ? 'Aramanızla eşleşen ürün bulunamadı' : 'Henüz ürün yok'}
+            {debouncedSearch ? 'Axtarışınızla uyğun məhsul tapılmadı' : 'Hələ məhsul yoxdur'}
           </h3>
           <p className="text-sm text-gray-500">
             {debouncedSearch
-              ? `"${debouncedSearch}" için sonuç bulunamadı. Farklı bir arama deneyin.`
-              : 'Admin panelinden ürün ekleyebilirsiniz'}
+              ? `"${debouncedSearch}" üçün nəticə tapılmadı. Fərqli bir axtarış edin.`
+              : 'Admin panelindən məhsul əlavə edə bilərsiniz'}
           </p>
           {debouncedSearch && (
             <button
               onClick={handleClearSearch}
               className="mt-4 px-4 py-2 text-sm bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors cursor-pointer"
             >
-              Aramayı Temizle
+              Axtarışı Təmizlə
             </button>
           )}
         </div>
       )}
 
-      {/* Ürün Grid'i */}
+      {/* Məhsul Grid-i */}
       {!loading && !error && products.length > 0 && (
         <ProductGrid products={products} />
       )}

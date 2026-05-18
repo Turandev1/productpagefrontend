@@ -22,15 +22,15 @@ export default function ProductForm({ token, onProductCreated }) {
     const validPreviews = []
 
     for (const file of files) {
-      // Dosya tipi kontrolü
+      // Fayl tipi yoxlaması
       if (!allowedTypes.includes(file.type)) {
-        toast.error(`"${file.name}" desteklenmiyor. Sadece JPEG, PNG, WebP ve AVIF formatları kabul edilir`)
+        toast.error(`"${file.name}" dəstəklənmir. Yalnız JPEG, PNG, WebP və AVIF formatları qəbul edilir`)
         continue
       }
 
-      // Dosya boyutu kontrolü
+      // Fayl ölçüsü yoxlaması
       if (file.size > maxSize) {
-        toast.error(`"${file.name}" çok büyük (max 10MB)`)
+        toast.error(`"${file.name}" çox böyükdür (max 10MB)`)
         continue
       }
 
@@ -43,7 +43,7 @@ export default function ProductForm({ token, onProductCreated }) {
     setImageFiles(prev => [...prev, ...validFiles])
     setImagePreviews(prev => [...prev, ...validPreviews])
 
-    // Input'u temizle (aynı dosyayı tekrar seçebilmek için)
+    // Input-u təmizlə (eyni faylı təkrar seçə bilmək üçün)
     if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
@@ -60,12 +60,12 @@ export default function ProductForm({ token, onProductCreated }) {
     e.preventDefault()
 
     if (!name.trim() || !description.trim()) {
-      toast.error('Ürün adı ve açıklaması zorunludur')
+      toast.error('Məhsul adı və açıqlaması məcburidir')
       return
     }
 
     if (imageFiles.length === 0) {
-      toast.error('En az bir ürün görseli zorunludur')
+      toast.error('Ən az bir məhsul şəkli məcburidir')
       return
     }
 
@@ -76,19 +76,19 @@ export default function ProductForm({ token, onProductCreated }) {
       formData.append('description', description.trim())
       formData.append('phoneNumber', phoneNumber.trim())
 
-      // Tüm görselleri FormData'ya ekle
+      // Bütün şəkilləri FormData-ya əlavə et
       imageFiles.forEach((file) => {
         formData.append('images', file)
       })
 
       await createProduct(formData, token)
 
-      toast.success('Ürün başarıyla eklendi!')
+      toast.success('Məhsul uğurla əlavə edildi!')
       setName('')
       setDescription('')
       setPhoneNumber('')
 
-      // Preview URL'lerini temizle
+      // Preview URL-lərini təmizlə
       imagePreviews.forEach(url => URL.revokeObjectURL(url))
       setImageFiles([])
       setImagePreviews([])
@@ -96,7 +96,7 @@ export default function ProductForm({ token, onProductCreated }) {
 
       if (onProductCreated) onProductCreated()
     } catch (err) {
-      toast.error(err.message || 'Ürün eklenirken hata oluştu')
+      toast.error(err.message || 'Məhsul əlavə edilərkən xəta baş verdi')
     } finally {
       setLoading(false)
     }
@@ -104,13 +104,13 @@ export default function ProductForm({ token, onProductCreated }) {
 
   return (
     <div className="bg-white rounded-2xl shadow-lg shadow-gray-200/50 border border-gray-100 p-6 sm:p-8">
-      <h2 className="text-xl font-bold text-gray-900 mb-6">Yeni Ürün Ekle</h2>
+      <h2 className="text-xl font-bold text-gray-900 mb-6">Yeni Məhsul Əlavə Et</h2>
 
       <form onSubmit={handleSubmit} className="space-y-5">
-        {/* Ürün Adı */}
+        {/* Məhsul Adı */}
         <div>
           <label htmlFor="productName" className="block text-sm font-medium text-gray-700 mb-1">
-            Ürün Adı
+            Məhsul Adı
           </label>
           <input
             id="productName"
@@ -118,15 +118,15 @@ export default function ProductForm({ token, onProductCreated }) {
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-sm bg-gray-50 focus:bg-white"
-            placeholder="Ürün adını girin"
+            placeholder="Məhsul adını daxil edin"
             maxLength={200}
           />
         </div>
 
-        {/* Telefon Numarası */}
+        {/* Telefon Nömrəsi */}
         <div>
           <label htmlFor="productPhone" className="block text-sm font-medium text-gray-700 mb-1">
-            WhatsApp Numarası <span className="text-xs text-gray-400 font-normal">(opsiyonel)</span>
+            WhatsApp Nömrəsi <span className="text-xs text-gray-400 font-normal">(istəyə bağlı)</span>
           </label>
           <input
             id="productPhone"
@@ -136,13 +136,13 @@ export default function ProductForm({ token, onProductCreated }) {
             className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-sm bg-gray-50 focus:bg-white"
             placeholder="+905551234567"
           />
-          <p className="mt-1 text-xs text-gray-400">Uluslararası format ile girin (örn: +905551234567)</p>
+          <p className="mt-1 text-xs text-gray-400">Beynəlxalq format ilə daxil edin (örn: +905551234567)</p>
         </div>
 
-        {/* Açıklama */}
+        {/* Açıqlama */}
         <div>
           <label htmlFor="productDesc" className="block text-sm font-medium text-gray-700 mb-1">
-            Açıklama
+            Açıqlama
           </label>
           <textarea
             id="productDesc"
@@ -150,16 +150,16 @@ export default function ProductForm({ token, onProductCreated }) {
             onChange={(e) => setDescription(e.target.value)}
             rows={5}
             className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-sm bg-gray-50 focus:bg-white resize-vertical"
-            placeholder="Ürün açıklamasını girin"
+            placeholder="Məhsul açıqlamasını daxil edin"
             maxLength={5000}
           />
-          <p className="mt-1 text-xs text-gray-400">{description.length}/5000 karakter</p>
+          <p className="mt-1 text-xs text-gray-400">{description.length}/5000 simvol</p>
         </div>
 
-        {/* Görsel Yükleme — Çoklu */}
+        {/* Şəkil Yükləmə — Çoxlu */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Ürün Görselleri
+            Məhsul Şəkilləri
             {imageFiles.length > 0 && (
               <span className="ml-2 text-xs font-normal text-gray-400">
                 ({imageFiles.length} seçildi)
@@ -174,7 +174,7 @@ export default function ProductForm({ token, onProductCreated }) {
                 <div key={index} className="relative group">
                   <img
                     src={preview}
-                    alt={`Görsel ${index + 1}`}
+                    alt={`Şəkil ${index + 1}`}
                     className="w-full aspect-square object-cover rounded-lg border border-gray-200"
                   />
                   <button
@@ -201,12 +201,12 @@ export default function ProductForm({ token, onProductCreated }) {
                 <svg className="w-6 h-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                 </svg>
-                <span className="text-[10px] text-gray-400">Ekle</span>
+                <span className="text-[10px] text-gray-400">Əlavə Et</span>
               </button>
             </div>
           )}
 
-          {/* Dropzone — sadece hiç görsel yoksa göster */}
+          {/* Dropzone — yalnız heç şəkil yoxdursa göstər */}
           {imagePreviews.length === 0 && (
             <div
               onClick={() => fileInputRef.current?.click()}
@@ -217,10 +217,10 @@ export default function ProductForm({ token, onProductCreated }) {
                   d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
               <p className="mt-2 text-sm text-gray-500">
-                Görsel seçmek için tıklayın
+                Şəkil seçmək üçün klikləyin
               </p>
               <p className="text-xs text-gray-400 mt-1">
-                JPEG, PNG, WebP veya AVIF • Her biri max 10MB • Birden fazla seçebilirsiniz
+                JPEG, PNG, WebP və ya AVIF • Hər biri max 10MB • Birdən çox seçə bilərsiniz
               </p>
             </div>
           )}
@@ -244,7 +244,7 @@ export default function ProductForm({ token, onProductCreated }) {
           {loading ? (
             <span className="flex items-center justify-center gap-2">
               <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-              Yükleniyor...
+              Yüklənir...
             </span>
           ) : (
             <span className="flex items-center justify-center gap-2">
@@ -252,7 +252,7 @@ export default function ProductForm({ token, onProductCreated }) {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                   d="M12 4v16m8-8H4" />
               </svg>
-              Ürünü Ekle
+              Məhsulu Əlavə Et
             </span>
           )}
         </button>
