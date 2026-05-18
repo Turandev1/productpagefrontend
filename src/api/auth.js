@@ -109,5 +109,14 @@ export const verifySession = async (password) => {
   return api.post('auth/verify-session', { password });
 };
 
+/**
+ * Admin Şifrəsini Dəyiş
+ * @param {string} currentPassword - Mövcud şifrə
+ * @param {string} newPassword - Yeni şifrə
+ */
+export const changePassword = async (currentPassword, newPassword) => {
+  return api.put('auth/change-password', { currentPassword, newPassword });
+};
+
 // Gələcəkdə digər fayllar üçün ümumi HTTP metodlarını istifadə etmək istəsəniz instance-ı ixrac edə bilərsiniz
 export default api;

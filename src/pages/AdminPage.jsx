@@ -4,6 +4,7 @@ import { toast } from 'react-toastify'
 import LoginForm from '../components/LoginForm'
 import ProductForm from '../components/ProductForm'
 import SessionPasswordForm from '../components/SessionPasswordForm'
+import PasswordChangeForm from '../components/PasswordChangeForm'
 import { getProducts, deleteProduct, updateProduct } from '../api/products'
 
 export default function AdminPage() {
@@ -20,6 +21,7 @@ export default function AdminPage() {
   const [editPhone, setEditPhone] = useState('')
   const [editFiles, setEditFiles] = useState([])
   const [editSaving, setEditSaving] = useState(false)
+  const [showPasswordChange, setShowPasswordChange] = useState(false)
 
   const fetchProducts = async () => {
     try {
@@ -171,6 +173,12 @@ export default function AdminPage() {
             Saytı Göstər
           </Link>
           <button
+            onClick={() => setShowPasswordChange((prev) => !prev)}
+            className="px-4 py-2 text-sm bg-indigo-50 text-indigo-700 rounded-lg hover:bg-indigo-100 transition-all duration-200 cursor-pointer"
+          >
+            {showPasswordChange ? 'Ləğv Et' : 'Şifrəni Dəyiş'}
+          </button>
+          <button
             onClick={handleLogout}
             className="px-4 py-2 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 hover:text-red-600 transition-all duration-200 cursor-pointer"
           >
@@ -178,101 +186,112 @@ export default function AdminPage() {
           </button>
         </div>
       </div>
+      {/* mehsul hissesi - yalnız şifrə dəyişmə aktiv deyilsə göstər */}
+      {!showPasswordChange && (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+          {/* Sol: Məhsul Əlavəetmə Formu */}
+          <div className="lg:col-span-1">
+            <ProductForm token={token} onProductCreated={fetchProducts} />
+          </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
-        {/* Sol: Məhsul Əlavəetmə Formu */}
-        <div className="lg:col-span-1">
-          <ProductForm token={token} onProductCreated={fetchProducts} />
-        </div>
+          {/* Sağ: Məhsul Siyahısı */}
+          <div className="lg:col-span-2">
+            <div className="bg-white rounded-2xl shadow-lg shadow-gray-200/50 border border-gray-100 p-6 sm:p-8">
+              <h2 className="text-xl font-bold text-gray-900 mb-4">
+                Mövcud Məhsullar
+                {!loading && (
+                  <span className="ml-2 text-sm font-normal text-gray-400">
+                    ({products.length})
+                  </span>
+                )}
+              </h2>
 
-        {/* Sağ: Məhsul Siyahısı */}
-        <div className="lg:col-span-2">
-          <div className="bg-white rounded-2xl shadow-lg shadow-gray-200/50 border border-gray-100 p-6 sm:p-8">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">
-              Mövcud Məhsullar
-              {!loading && (
-                <span className="ml-2 text-sm font-normal text-gray-400">
-                  ({products.length})
-                </span>
-              )}
-            </h2>
-
-            {loading ? (
-              <div className="flex justify-center py-10">
-                <div className="w-8 h-8 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin"></div>
-              </div>
-            ) : products.length === 0 ? (
-              <div className="text-center py-10 text-gray-400">
-                <svg className="w-12 h-12 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
-                    d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
-                </svg>
-                <p className="text-sm">Hələ məhsul əlavə edilməmişdir</p>
-              </div>
-            ) : (
-              <div className="space-y-3">
-                {products.map((product) => (
-                  <div
-                    key={product._id}
-                    className="flex items-center gap-3 sm:gap-4 p-3 rounded-lg hover:bg-gray-50 transition-colors border border-gray-100 hover:border-gray-200 hover:shadow-sm"
-                  >
-                    <img
-                      src={product.images?.[0]?.url || product.imageUrl}
-                      alt={product.name}
-                      className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg object-cover bg-gray-100 flex-shrink-0"
-                    />
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-sm font-medium text-gray-900 truncate">
-                        {product.name}
-                      </h3>
-                      <p className="text-xs text-gray-400 truncate mt-0.5">
-                        {product.description?.substring(0, 60)}...
-                      </p>
-                      {product.images?.length > 1 && (
-                        <span className="inline-flex items-center gap-1 mt-1 text-xs text-blue-500">
-                          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              {loading ? (
+                <div className="flex justify-center py-10">
+                  <div className="w-8 h-8 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin"></div>
+                </div>
+              ) : products.length === 0 ? (
+                <div className="text-center py-10 text-gray-400">
+                  <svg className="w-12 h-12 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
+                      d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                  </svg>
+                  <p className="text-sm">Hələ məhsul əlavə edilməmişdir</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {products.map((product) => (
+                    <div
+                      key={product._id}
+                      className="flex items-center gap-3 sm:gap-4 p-3 rounded-lg hover:bg-gray-50 transition-colors border border-gray-100 hover:border-gray-200 hover:shadow-sm"
+                    >
+                      <img
+                        src={product.images?.[0]?.url || product.imageUrl}
+                        alt={product.name}
+                        className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg object-cover bg-gray-100 flex-shrink-0"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-sm font-medium text-gray-900 truncate">
+                          {product.name}
+                        </h3>
+                        <p className="text-xs text-gray-400 truncate mt-0.5">
+                          {product.description?.substring(0, 60)}...
+                        </p>
+                        {product.images?.length > 1 && (
+                          <span className="inline-flex items-center gap-1 mt-1 text-xs text-blue-500">
+                            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            {product.images.length} şəkil
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-2 flex-shrink-0">
+                        <Link
+                          to={`/product/${product._id}`}
+                          className="text-xs text-blue-600 hover:text-blue-800 transition-colors cursor-pointer"
+                        >
+                          Göstər
+                        </Link>
+                        <button
+                          onClick={() => handleEditStart(product)}
+                          className="p-1.5 text-gray-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-colors cursor-pointer"
+                          title="Redaktə Et"
+                        >
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                           </svg>
-                          {product.images.length} şəkil
-                        </span>
-                      )}
+                        </button>
+                        <button
+                          onClick={() => handleDelete(product._id, product.name)}
+                          className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
+                          title="Sil"
+                        >
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </button>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2 flex-shrink-0">
-                      <Link
-                        to={`/product/${product._id}`}
-                        className="text-xs text-blue-600 hover:text-blue-800 transition-colors cursor-pointer"
-                      >
-                        Göstər
-                      </Link>
-                      <button
-                        onClick={() => handleEditStart(product)}
-                        className="p-1.5 text-gray-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-colors cursor-pointer"
-                        title="Redaktə Et"
-                      >
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                        </svg>
-                      </button>
-                      <button
-                        onClick={() => handleDelete(product._id, product.name)}
-                        className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
-                        title="Sil"
-                      >
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      )}
+
+      {/* Şifrə Dəyişmə Bölməsi - yalnız aktivdirsə göstər */}
+      {showPasswordChange && (
+        <div>
+          <PasswordChangeForm
+            onPasswordChanged={() => setShowPasswordChange(false)}
+          />
+        </div>
+      )}
 
       {/* Redaktə Modalı */}
       {editingProduct && (
