@@ -11,6 +11,7 @@ export default function AdminPage() {
   const [sessionVerified, setSessionVerified] = useState(
     () => sessionStorage.getItem('adminSessionVerified') === 'true'
   )
+  // ejorghj
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [editingProduct, setEditingProduct] = useState(null)
